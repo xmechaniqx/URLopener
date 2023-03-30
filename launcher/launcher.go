@@ -17,7 +17,7 @@ func main() {
 
 }
 
-func Open(url string, regChrome, regYandex int) error {
+func Open(url string, regChrome, regYandex bool) error {
 	var cmd string
 	var argEx, argYa, argChr []string
 
@@ -30,14 +30,14 @@ func Open(url string, regChrome, regYandex int) error {
 	argEx = []string{"/c", "start", url}
 	// args = append(args, url)
 
-	if regYandex == 1 {
+	if regYandex == true {
 		err := exec.Command(cmd, argYa...).Start()
 		if err != nil {
 			log.Fatal(err, "regYandex")
 			return err
 		}
 	}
-	if regYandex == 0 && regChrome == 1 {
+	if regYandex == false && regChrome == true {
 		err := exec.Command(cmd, argChr...).Start()
 		time.Sleep(5 * time.Second)
 		if err != nil {
@@ -46,7 +46,7 @@ func Open(url string, regChrome, regYandex int) error {
 		}
 	}
 
-	if regYandex == 0 && regChrome == 0 {
+	if regYandex == false && regChrome == false {
 		exec.Command(cmd, argEx...).Start()
 		time.Sleep(5 * time.Second)
 	}
@@ -58,12 +58,12 @@ func Open(url string, regChrome, regYandex int) error {
 	}
 	return err
 }
-func BrowserRegSearcherChrome() int {
-	var regChrome int
+func BrowserRegSearcherChrome() bool {
+	var regChrome bool
 	k, err := registry.OpenKey(registry.CURRENT_USER, `Software\Google`, registry.ALL_ACCESS)
 	if err != nil {
 		// log.Fatal(err, "Ошибка открытия ключа Chrome")
-		regChrome = 0
+		regChrome = false
 		return regChrome
 	}
 
@@ -74,18 +74,18 @@ func BrowserRegSearcherChrome() int {
 	}
 	for _, v := range regFindingValueChrome {
 		if v == "Chrome" {
-			regChrome = 1
+			regChrome = true
 		}
 	}
 	// regChrome = 0
 	return regChrome
 }
-func BrowserRegSearcherYandex() int {
-	var regYandex int
+func BrowserRegSearcherYandex() bool {
+	var regYandex bool
 	k, err := registry.OpenKey(registry.CURRENT_USER, `Software\Yandex`, registry.ALL_ACCESS)
 	if err != nil {
 		// 	log.Fatal(err, "Ошибка открытия ключа Yandex")
-		regYandex = 0
+		regYandex = false
 		return regYandex
 	}
 
@@ -96,7 +96,7 @@ func BrowserRegSearcherYandex() int {
 	}
 	for _, v := range regFindingValueChrome {
 		if v == "YandexBrowser" {
-			regYandex = 1
+			regYandex = true
 		}
 	}
 	// regYandex = 0

@@ -29,6 +29,7 @@ func Gui() (url, name string) {
 	btn.OnClick().Bind(func(e *winc.Event) {
 		url = (edt.Text())
 		url = strings.Replace(url, "https://", "", -1)
+
 		var arrString []string
 
 		arrString = append(arrString, (drn.Text()))
