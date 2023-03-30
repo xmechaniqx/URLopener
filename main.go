@@ -13,7 +13,7 @@ import (
 func main() {
 
 	compilator()
-	time.Sleep(3 * time.Second)
+	time.Sleep(5 * time.Second)
 	defer tryDefer()
 
 }

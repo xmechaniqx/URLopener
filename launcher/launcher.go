@@ -3,6 +3,7 @@ package main
 import (
 	"log"
 	"os/exec"
+	"time"
 
 	"golang.org/x/sys/windows/registry"
 )
@@ -38,6 +39,7 @@ func Open(url string, regChrome, regYandex int) error {
 	}
 	if regYandex == 0 && regChrome == 1 {
 		err := exec.Command(cmd, argChr...).Start()
+		time.Sleep(5 * time.Second)
 		if err != nil {
 			log.Fatal(err, "regChrome")
 			return err
@@ -46,6 +48,7 @@ func Open(url string, regChrome, regYandex int) error {
 
 	if regYandex == 0 && regChrome == 0 {
 		exec.Command(cmd, argEx...).Start()
+		time.Sleep(5 * time.Second)
 	}
 
 	var err error
@@ -57,10 +60,13 @@ func Open(url string, regChrome, regYandex int) error {
 }
 func BrowserRegSearcherChrome() int {
 	var regChrome int
-	k, err := registry.OpenKey(registry.CURRENT_USER, `SOFTWARE\Google`, registry.ALL_ACCESS)
+	k, err := registry.OpenKey(registry.CURRENT_USER, `Software\Google`, registry.ALL_ACCESS)
 	if err != nil {
-		log.Fatal(err, "Ошибка открытия ключа")
+		// log.Fatal(err, "Ошибка открытия ключа Chrome")
+		regChrome = 0
+		return regChrome
 	}
+
 	defer k.Close()
 	regFindingValueChrome, err := k.ReadSubKeyNames(0)
 	if err != nil {
@@ -76,10 +82,13 @@ func BrowserRegSearcherChrome() int {
 }
 func BrowserRegSearcherYandex() int {
 	var regYandex int
-	k, err := registry.OpenKey(registry.CURRENT_USER, `SOFTWARE\Yandex`, registry.ALL_ACCESS)
+	k, err := registry.OpenKey(registry.CURRENT_USER, `Software\Yandex`, registry.ALL_ACCESS)
 	if err != nil {
-		log.Fatal(err, "Ошибка открытия ключа")
+		// 	log.Fatal(err, "Ошибка открытия ключа Yandex")
+		regYandex = 0
+		return regYandex
 	}
+
 	defer k.Close()
 	regFindingValueChrome, err := k.ReadSubKeyNames(0)
 	if err != nil {
